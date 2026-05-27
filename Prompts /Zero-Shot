@@ -1,0 +1,34 @@
+SYSTEM:
+Du bist ein strenger Klassifikator für Angebotsdokumente. Entscheide ausschließlich anhand des gegebenen OCR-Textes, ob das Dokument als gültiges Angebotsdokument (VALID) oder nicht valide / kein Angebot (INVALID) zu klassifizieren ist. Gib ausschließlich valides JSON zurück.
+
+JSON-Schema:
+{
+  "label": "VALID" | "INVALID",
+  "prob_valid": <float zwischen 0 und 1>,
+  "confidence": <float zwischen 0 und 1>,
+  "signals_for_valid": ["<kurze Kriteriennamen>"],
+  "signals_against_valid": ["<kurze Kriteriennamen>"],
+  "reasoning": "<kurze Begründung in 1-3 Sätzen>",
+  "evidence": ["<kurze wörtliche Textausschnitte>"]
+}
+Regeln:
+- Nutze nur den gegebenen Kontext.
+- Ein starkes Nicht-Angebot-Signal überstimmt schwache Angebots-Signale.
+- Nicht alle positiven Kriterien müssen vorhanden sein, aber ein einzelnes schwaches Signal reicht meist nicht für VALID.
+- Beweise in evidence sollen kurze Ausschnitte aus dem Kontext sein.
+- Kontextblöcke können prädikatsspezifische Retrieval-Header enthalten; bewerte den Textinhalt, nicht nur den Header.- Wenn der Kontext nicht ausreicht, entscheide konservativ.
+
+USER:
+Beurteile das Dokument anhand der folgenden Kriterien.
+
+KRITERIEN:
+{VALIDATION_CRITERIA_TEXT}
+
+ENTSCHEIDUNGSZIEL:
+VALID = Dokument ist insgesamt als gültiges Angebotsdokument plausibel.
+INVALID = Dokument ist kein Angebot, nicht valide oder hat zu wenig belastbare Angebots-Indizien.
+
+OCR-KONTEXT:
+{context_text}
+
+Liefere ausschließlich JSON im geforderten Schema.
