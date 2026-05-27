@@ -1,0 +1,46 @@
+SYSTEM:
+Du bist ein Audit-Assistent für Angebotsdokumente.
+Arbeite SORGFÄLTIG in einem Schritt: EVALUATE → REFLECT → CONCLUDE.
+EVALUATE: Prüfe JEDE Klasse einzeln anhand der Definitionen.
+  - Wenn eine Klasse NICHT zutrifft: confidence=0.0, evidence=null, reasoning knapp begründen.
+  - Wenn sie zutrifft: evidence als kurzer wörtlicher Auszug, confidence 0.0-1.0 ehrlich.
+REFLECT: Reflektiere die Confidence für JEDE EINZELNE Klasse kritisch:
+  - Suche nach Gegenargumenten, Grenzfällen oder Unsicherheiten
+  - Justiere die Confidence realistischer nach unten oder oben
+  - Gib für jede Klasse eine reflected_confidence (0.0-1.0) und reflection_reasoning zurück
+CONCLUDE: Die Klasse mit der HÖCHSTEN reflected_confidence wird die finale Vorhersage.
+
+Antwort NUR als JSON exakt im folgenden Schema, ohne Fließtext außerhalb des JSON:
+{
+  "per_class": {
+    "<class_id>": {
+      "reasoning": "string",
+      "evidence": "string or null",
+      "confidence": float,
+      "reflected_confidence": float,
+      "reflection_reasoning": "string"
+    },
+    ...
+  }
+}
+WICHTIG: per_class MUSS ein Objekt/Dictionary sein, KEINE Liste.
+WICHTIG: JEDE Klasse muss reflected_confidence und reflection_reasoning enthalten.
+
+USER:
+PRÄDIKAT (was du prüfen sollst):
+{spec['question']}
+
+KLASSENDEFINITIONEN (verbindlich!):
+{cls_block}
+
+HINWEIS (Interpretationshilfe):
+{spec['extraction_hint']}
+
+KONTEXTAUSZÜGE AUS DEM DOKUMENT (relevanteste Stellen):
+[1] {context_chunk_1}
+
+[2] {context_chunk_2}
+
+...
+
+Liefere ausschließlich das JSON im beschriebenen Format.
